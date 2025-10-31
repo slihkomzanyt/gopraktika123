@@ -32,7 +32,5 @@ func main() {
 	circle := Circle{8}
 
 	printShapeArea(square)
-	printShapeArea(circle)
 
 }
-.
