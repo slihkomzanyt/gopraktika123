@@ -2,19 +2,19 @@ package main
 
 import (
 	"fmt"
-	"sort"
 )
 
-func mergeAndSort(arr1, arr2 []int) []int {
-	rezultat := append(arr1, arr2...)
-	sort.Ints(rezultat)
-	return rezultat
+func IsLeapYear(year int) bool {
+	if year%4 == 0 && year%100 != 0 || year%400 == 0 {
+		return true
+	}
+	return false
 
 }
+
 func main() {
-	arr1 := []int{1, 2, 3, 4, 5}
-	arr2 := []int{4, 2, 6, 6, 1}
-	rezultat := mergeAndSort(arr1, arr2)
-	fmt.Println(rezultat)
+	year := 2024
+	otvet := IsLeapYear(year)
+	fmt.Println(otvet)
 
 }
