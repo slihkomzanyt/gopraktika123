@@ -4,21 +4,18 @@ import (
 	"fmt"
 )
 
-func maxOfThree(a int, b int, c int) int {
-	if a > b && a >= c {
-		return a
+func reverse(s string) string {
+
+	var result []rune
+	originalRunes := []rune(s)
+	for i := len(originalRunes) - 1; i >= 0; i-- {
+		result = append(result, originalRunes[i])
 	}
-	if b >= a && b >= c {
-		return b
-	}
-	return c
+	return string(result)
 }
 
 func main() {
-	a := 1
-	b := 2
-	c := 3
-	Three := maxOfThree(a, b, c)
-	fmt.Println(Three)
 
+	fmt.Println(reverse("hello"))
+	fmt.Println(reverse("привет"))
 }
