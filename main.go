@@ -4,17 +4,21 @@ import (
 	"fmt"
 )
 
-func IsLeapYear(year int) bool {
-	if year%4 == 0 && year%100 != 0 || year%400 == 0 {
-		return true
+func maxOfThree(a int, b int, c int) int {
+	if a > b && a >= c {
+		return a
 	}
-	return false
-
+	if b >= a && b >= c {
+		return b
+	}
+	return c
 }
 
 func main() {
-	year := 2024
-	otvet := IsLeapYear(year)
-	fmt.Println(otvet)
+	a := 1
+	b := 2
+	c := 3
+	Three := maxOfThree(a, b, c)
+	fmt.Println(Three)
 
 }
