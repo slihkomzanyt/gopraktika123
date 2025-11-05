@@ -2,32 +2,39 @@ package main
 
 import (
 	"fmt"
-	"unicode"
 )
 
-func charCase(r rune) string {
+func calculator(a, b int, op string) int {
 
-	switch {
-	case unicode.Is(unicode.Latin, r) && unicode.IsUpper(r):
-		return ("Латинская заглавная")
+	errorMsg := "на ноль делить нельзя"
+	switch op {
+	case "+":
+		return a + b
 
-	case unicode.Is(unicode.Cyrillic, r) && unicode.IsUpper(r):
-		return ("Кириллица заглавная")
+	case "-":
+		return a - b
 
-	case unicode.Is(unicode.Latin, r) && unicode.IsLower(r):
-		return ("латинская маленькая")
+	case "*":
+		return a * b
 
-	case unicode.Is(unicode.Cyrillic, r) && unicode.IsLower(r):
-		return ("кириллица маленькая")
+	case "/":
+		if b == 0 {
+			fmt.Println(errorMsg)
+			return 0
+		} else {
+			return a / b
+		}
 
 	default:
-		return ("Другое")
+		return 0
 	}
 
 }
 
 func main() {
+	a := 1
+	b := 2
 
-	fmt.Println(charCase('h'))
-	fmt.Println(charCase('G'))
+	fmt.Println(calculator(a, b, "+"))
+
 }
