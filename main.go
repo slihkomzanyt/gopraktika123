@@ -2,20 +2,32 @@ package main
 
 import (
 	"fmt"
+	"unicode"
 )
 
-func reverse(s string) string {
+func charCase(r rune) string {
 
-	var result []rune
-	originalRunes := []rune(s)
-	for i := len(originalRunes) - 1; i >= 0; i-- {
-		result = append(result, originalRunes[i])
+	switch {
+	case unicode.Is(unicode.Latin, r) && unicode.IsUpper(r):
+		return ("Латинская заглавная")
+
+	case unicode.Is(unicode.Cyrillic, r) && unicode.IsUpper(r):
+		return ("Кириллица заглавная")
+
+	case unicode.Is(unicode.Latin, r) && unicode.IsLower(r):
+		return ("латинская маленькая")
+
+	case unicode.Is(unicode.Cyrillic, r) && unicode.IsLower(r):
+		return ("кириллица маленькая")
+
+	default:
+		return ("Другое")
 	}
-	return string(result)
+
 }
 
 func main() {
 
-	fmt.Println(reverse("hello"))
-	fmt.Println(reverse("привет"))
+	fmt.Println(charCase('h'))
+	fmt.Println(charCase('G'))
 }
