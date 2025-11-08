@@ -2,39 +2,25 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 )
 
-func calculator(a, b int, op string) int {
-
-	errorMsg := "на ноль делить нельзя"
-	switch op {
-	case "+":
-		return a + b
-
-	case "-":
-		return a - b
-
-	case "*":
-		return a * b
-
-	case "/":
-		if b == 0 {
-			fmt.Println(errorMsg)
-			return 0
-		} else {
-			return a / b
-		}
-
-	default:
-		return 0
+func reverseNumber(n int) int {
+	if n < 0 {
+		n = -n
 	}
+	str := strconv.Itoa(n)
+	reversed := ""
 
+	for i := len(str) - 1; i >= 0; i-- {
+		reversed += string(str[i])
+
+	}
+	result, _ := strconv.Atoi(reversed)
+	return result
 }
 
 func main() {
-	a := 1
-	b := 2
 
-	fmt.Println(calculator(a, b, "+"))
-
+	fmt.Println(reverseNumber(123))
 }
