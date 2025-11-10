@@ -4,14 +4,18 @@ import (
 	"fmt"
 )
 
-func increment(ptr *int) {
+func removeAtIndex(arr []int, index int) []int {
+	if index < 0 || index >= len(arr) {
+		return arr
 
-	*ptr++
-
+	} else {
+		return append(arr[:index], arr[index+1:]...)
+	}
 }
 
 func main() {
-	n := 4
-	increment(&n)
-	fmt.Println(n)
+	nums := []int{1, 2, 3}
+	nums = removeAtIndex(nums, 1)
+
+	fmt.Println(nums)
 }
