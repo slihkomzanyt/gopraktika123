@@ -4,18 +4,20 @@ import (
 	"fmt"
 )
 
-func removeAtIndex(arr []int, index int) []int {
-	if index < 0 || index >= len(arr) {
-		return arr
-
-	} else {
-		return append(arr[:index], arr[index+1:]...)
-	}
+func safeDivide(a, b int) (result int) {
+    defer func() {
+        if r := recover(); r != nil {
+            result = 0  
+        }
+    } 
+    
+    if b == 0 {
+        panic("деление на ноль")
+    }
+    return a / b
 }
 
 func main() {
-	nums := []int{1, 2, 3}
-	nums = removeAtIndex(nums, 1)
-
-	fmt.Println(nums)
+	
+	fmt.Println()
 }
