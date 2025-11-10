@@ -4,16 +4,14 @@ import (
 	"fmt"
 )
 
-func sequenceGenerator() func() int {
-	count := 0
-	return func() int {
-		count++
-		return count
-	}
+func increment(ptr *int) {
+
+	*ptr++
 
 }
 
 func main() {
-	next := sequenceGenerator()
-	fmt.Println(next())
+	n := 4
+	increment(&n)
+	fmt.Println(n)
 }
