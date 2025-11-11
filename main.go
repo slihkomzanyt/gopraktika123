@@ -4,20 +4,24 @@ import (
 	"fmt"
 )
 
-func safeDivide(a, b int) (result int) {
-    defer func() {
-        if r := recover(); r != nil {
-            result = 0  
-        }
-    } 
-    
-    if b == 0 {
-        panic("деление на ноль")
-    }
-    return a / b
+func safeFunction(f func()) {
+
+	defer func() {
+		if r := recover(); r != nil {
+
+			fmt.Printf("ошибка: %v\n", r)
+		}
+
+	}()
+
+	f()
+
 }
 
 func main() {
-	
-	fmt.Println()
+
+	safeFunction(func() {
+		fmt.Println("code go")
+		panic("code trabl")
+	})
 }
