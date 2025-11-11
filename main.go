@@ -2,22 +2,18 @@ package main
 
 import (
 	"fmt"
-	"strings"
 )
 
-func wordCount(text string) map[string]int {
-	wordCount := make(map[string]int)
-	lowerText := strings.ToLower(text)
-	words := strings.Fields(lowerText)
-	for _, word := range words {
-		wordCount[word]++
+func invertMap(m map[string]int) map[int]string {
+	inverted := make(map[int]string)
+	for key, value := range m {
+		inverted[value] = key
 	}
-	return wordCount
+	return inverted
 }
 
 func main() {
 
-	result := wordCount("Hello, hello world! World.")
-	fmt.Println(result)
-
+	m := map[string]int{"a": 1, "b": 2, "c": 1}
+	fmt.Println(invertMap(m))
 }
