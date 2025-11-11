@@ -2,26 +2,22 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
-func safeFunction(f func()) {
-
-	defer func() {
-		if r := recover(); r != nil {
-
-			fmt.Printf("ошибка: %v\n", r)
-		}
-
-	}()
-
-	f()
-
+func wordCount(text string) map[string]int {
+	wordCount := make(map[string]int)
+	lowerText := strings.ToLower(text)
+	words := strings.Fields(lowerText)
+	for _, word := range words {
+		wordCount[word]++
+	}
+	return wordCount
 }
 
 func main() {
 
-	safeFunction(func() {
-		fmt.Println("code go")
-		panic("code trabl")
-	})
+	result := wordCount("Hello, hello world! World.")
+	fmt.Println(result)
+
 }
