@@ -4,63 +4,60 @@ import (
 	"fmt"
 )
 
-type Product struct {
-	ID       int
-	Name     string
-	Price    float64
-	Quantity int
+type Ticket struct {
+	ID            int
+	PassengerName string
+	Destination   string
 }
 
-type Inventory struct {
-	products map[int]Product
+type BookingSystem struct {
+	ticket map[int]Ticket
 }
 
-func (inv *Inventory) SellProduct(id, qty int) error {
-	product, exists := inv.products[id]
-	if !exists {
-		return fmt.Errorf("товар не найден")
+func (bs *BookingSystem) BookTicket(id int, name, destination string) error {
+	if _, exists := bs.ticket[id]; exists {
+		return fmt.Errorf("билет с ID %d уже существует", id)
 	}
-	if product.Quantity < qty {
-		return fmt.Errorf("недостаточно товара")
+	// Добавляем билет если он не существует
+	bs.ticket[id] = Ticket{
+		ID:            id,
+		PassengerName: name,
+		Destination:   destination,
 	}
-	product.Quantity -= qty
-	inv.products[id] = product
 	return nil
 }
 
-func (inv *Inventory) AddProduct(p Product) {
-	inv.products[p.ID] = p
+func (bs *BookingSystem) GetTicket(id int) (Ticket, error) {
+	ticket, exists := bs.ticket[id]
+	if !exists {
+		return Ticket{}, fmt.Errorf("билет с ID %d не найден", id)
+	}
+	return ticket, nil
+}
+
+func (bs *BookingSystem) CancelTicket(id int) error {
+	if _, exists := bs.ticket[id]; !exists {
+		return fmt.Errorf("билет с ID %d не найден", id)
+	}
+	delete(bs.ticket, id)
+	return nil
 }
 
 func main() {
+	system := &BookingSystem{ticket: make(map[int]Ticket)}
 
-	inv := &Inventory{
-		products: make(map[int]Product),
-	}
-
-	inv.AddProduct(Product{
-		ID:       1,
-		Name:     "Laptop",
-		Price:    1000.0,
-		Quantity: 5,
-	})
-
-	inv.AddProduct(Product{
-		ID:       2,
-		Name:     "Phone",
-		Price:    500.0,
-		Quantity: 10,
-	})
-
-	err := inv.SellProduct(1, 3)
+	err := system.BookTicket(1, "Иван", "Москва")
 	if err != nil {
-		fmt.Println("Ошибка:", err)
-	} else {
-		fmt.Println("Продажа успешна!")
+		fmt.Println("Ошибка бронирования:", err)
+		return
 	}
 
-	err = inv.SellProduct(1, 5)
+	ticket, err := system.GetTicket(1)
 	if err != nil {
-		fmt.Println("Ошибка:", err)
+		fmt.Println("Ошибка получения:", err)
+		return
 	}
+
+	fmt.Printf("Билет: ID=%d, Пассажир=%s, Направление=%s\n",
+		ticket.ID, ticket.PassengerName, ticket.Destination)
 }
