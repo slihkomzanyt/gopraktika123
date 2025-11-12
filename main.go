@@ -4,16 +4,21 @@ import (
 	"fmt"
 )
 
-func invertMap(m map[string]int) map[int]string {
-	inverted := make(map[int]string)
-	for key, value := range m {
-		inverted[value] = key
+func mergetMap(m1, m2 map[string]int) map[string]int {
+	mergetMap := make(map[string]int)
+	for key, value := range m1 {
+		mergetMap[key] = value
 	}
-	return inverted
+	for key, value := range m2 {
+		mergetMap[key] += value
+	}
+	return mergetMap
 }
 
 func main() {
 
-	m := map[string]int{"a": 1, "b": 2, "c": 1}
-	fmt.Println(invertMap(m))
+	m1 := map[string]int{"apple": 5, "banana": 3}
+	m2 := map[string]int{"banana": 5, "orenge": 3}
+	result := mergetMap(m1, m2)
+	fmt.Println(result)
 }
