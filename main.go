@@ -2,38 +2,41 @@ package main
 
 import (
 	"fmt"
-	"sync"
-	"sync/atomic"
+	"math/rand"
 )
 
-type counter struct {
-	count int64
-}
-
-func (c *counter) inc() {
-
-	atomic.AddInt64(&c.count, 1)
-
-}
-
-func (c *counter) value() int64 {
-
-	return atomic.LoadInt64(&c.count)
+func sumPart(nums []int, resultCh chan int) {
+	part := 0
+	for i := 0; i < len(nums); i++ {
+		part += nums[i]
+	}
+	resultCh <- part
 }
 
 func main() {
-	c := counter{}
+	const parts = 10
 
-	wg := sync.WaitGroup{}
-
-	for i := 0; i < 10; i++ {
-		wg.Add(1)
-		go func() {
-			c.inc()
-			wg.Done()
-		}()
+	nums := make([]int, 1000)
+	for i := range nums {
+		nums[i] = rand.Intn(100)
 	}
 
-	wg.Wait()
-	fmt.Println(c.value())
+	chunkSize := len(nums) / parts
+	resultCh := make(chan int, parts)
+
+	for i := 0; i < parts; i++ {
+		start := i * chunkSize
+		end := start + chunkSize
+		chunk := nums[start:end]
+
+		go sumPart(chunk, resultCh)
+	}
+
+	total := 0
+	for i := 0; i < parts; i++ {
+		val := <-resultCh
+		total += val
+	}
+
+	fmt.Println("Total sum:", total)
 }
