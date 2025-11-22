@@ -12,21 +12,33 @@ func generator(nums chan<- int) {
 	close(nums)
 }
 
-func consumer(nums <-chan int, wg *sync.WaitGroup) {
+func kvadrat(nums <-chan int, out chan<- int) {
+
+	for x := range nums {
+		nums2 := x * x
+		out <- nums2
+	}
+	close(out)
+}
+
+func printer(in <-chan int, wg *sync.WaitGroup) {
 	defer wg.Done()
-	for num := range nums {
-		fmt.Println(num)
+
+	for x := range in {
+		fmt.Println(x)
 	}
 }
 
 func main() {
 	nums := make(chan int)
+	squared := make(chan int)
 	var wg sync.WaitGroup
 
 	wg.Add(1)
 
 	go generator(nums)
-	go consumer(nums, &wg)
+	go kvadrat(nums, squared)
+	go printer(squared, &wg)
 
 	wg.Wait()
 }
