@@ -2,41 +2,31 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
+	"sync"
 )
 
-func sumPart(nums []int, resultCh chan int) {
-	part := 0
-	for i := 0; i < len(nums); i++ {
-		part += nums[i]
+func generator(nums chan<- int) {
+	for x := 1; x <= 5; x++ {
+		nums <- x
 	}
-	resultCh <- part
+	close(nums)
+}
+
+func consumer(nums <-chan int, wg *sync.WaitGroup) {
+	defer wg.Done()
+	for num := range nums {
+		fmt.Println(num)
+	}
 }
 
 func main() {
-	const parts = 10
+	nums := make(chan int)
+	var wg sync.WaitGroup
 
-	nums := make([]int, 1000)
-	for i := range nums {
-		nums[i] = rand.Intn(100)
-	}
+	wg.Add(1)
 
-	chunkSize := len(nums) / parts
-	resultCh := make(chan int, parts)
+	go generator(nums)
+	go consumer(nums, &wg)
 
-	for i := 0; i < parts; i++ {
-		start := i * chunkSize
-		end := start + chunkSize
-		chunk := nums[start:end]
-
-		go sumPart(chunk, resultCh)
-	}
-
-	total := 0
-	for i := 0; i < parts; i++ {
-		val := <-resultCh
-		total += val
-	}
-
-	fmt.Println("Total sum:", total)
+	wg.Wait()
 }
