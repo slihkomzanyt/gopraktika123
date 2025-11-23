@@ -1,44 +1,30 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"sync"
+	"time"
 )
 
-func generator(nums chan<- int) {
-	for x := 1; x <= 5; x++ {
-		nums <- x
-	}
-	close(nums)
-}
+func worker(ctx context.Context) {
+	for {
+		select {
+		case <-time.After(time.Second):
+			fmt.Println("тик")
+		case <-ctx.Done():
+			fmt.Println("stop")
+			return
 
-func kvadrat(nums <-chan int, out chan<- int) {
-
-	for x := range nums {
-		nums2 := x * x
-		out <- nums2
-	}
-	close(out)
-}
-
-func printer(in <-chan int, wg *sync.WaitGroup) {
-	defer wg.Done()
-
-	for x := range in {
-		fmt.Println(x)
+		}
 	}
 }
 
 func main() {
-	nums := make(chan int)
-	squared := make(chan int)
-	var wg sync.WaitGroup
 
-	wg.Add(1)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
 
-	go generator(nums)
-	go kvadrat(nums, squared)
-	go printer(squared, &wg)
+	go worker(ctx)
 
-	wg.Wait()
+	time.Sleep(4 * time.Second)
 }
