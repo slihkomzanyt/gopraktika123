@@ -6,25 +6,30 @@ import (
 	"time"
 )
 
-func worker(ctx context.Context) {
-	for {
-		select {
-		case <-time.After(time.Second):
-			fmt.Println("тик")
-		case <-ctx.Done():
-			fmt.Println("stop")
-			return
+func worker(ctx context.Context, d time.Duration, msg string, ch chan<- string) {
+	time.Sleep(d)
 
-		}
+	select {
+	case <-ctx.Done():
+
+		return
+	case ch <- msg:
+
 	}
+
 }
 
 func main() {
 
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+	ch := make(chan string)
 
-	go worker(ctx)
+	go worker(ctx, time.Second, "a", ch)
+	go worker(ctx, 3*time.Second, "b", ch)
 
-	time.Sleep(4 * time.Second)
+	res := <-ch
+	fmt.Println(res)
+
+	cancel()
 }
