@@ -1,34 +1,34 @@
 package main
+package main
 
 import (
-	"fmt"
-	"sync"
+    "fmt"
+    "sync"
 )
 
 func worker(id int, jobs <-chan int, wg *sync.WaitGroup) {
-	defer wg.Done()
-
-	for n := range jobs {
-		fmt.Printf("Worker %d is processing number %d\n", id, n)
-	}
+    defer wg.Done()
+    for num := range jobs {
+        fmt.Printf("Worker %d processing %d\n", id, num)
+    }
 }
 
 func main() {
+    jobs := make(chan int)
+    var wg sync.WaitGroup
 
-	numJobs := 20
-	numWorkers := 5
+    
+    for i := 1; i <= 3; i++ {
+        wg.Add(1)
+        go worker(i, jobs, &wg)
+    }
 
-	jobs := make(chan int)
-	var wg sync.WaitGroup
+   
+    for i := 1; i <= 20; i++ {
+        jobs <- i
+    }
+    close(jobs)
 
-	for i := 1; i <= numWorkers; i++ {
-		wg.Add(1)
-		go worker(i, jobs, &wg)
-	}
-
-	for j := 1; j <= numJobs; j++ {
-		jobs <- j
-	}
-	close(jobs)
-	wg.Wait()
+    wg.Wait()
+    fmt.Println("All jobs done!")
 }
